@@ -1,0 +1,58 @@
+Subject: Add optimization to cflags in sysconfig.py when building C modules.
+
+When compiling C code using python, the resulting binary is not being optimized
+properly. Currently this is caused by the 'OPT' variable never being imported or
+used in distutils/sysconfig.py and not being appended to the cflags variable.
+This patch fixes the issue by importing 'OPT' and appending it to 'cflags'.
+
+Author: Mitchell Dzurick <mitchell.dzurick@canonical.com>
+Date: Sun, 15 Oct 2023 17:50:49 +0300
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/2002043
+--- a/Lib/distutils/sysconfig.py
++++ b/Lib/distutils/sysconfig.py
+@@ -190,12 +190,22 @@
+                 _osx_support.customize_compiler(_config_vars)
+                 _config_vars['CUSTOMIZED_OSX_COMPILER'] = 'True'
+ 
+-        (cc, cxx, cflags, extra_cflags, basecflags,
+-         ccshared, ldshared, so_ext, ar, ar_flags,
+-         configure_cppflags, configure_cflags, configure_ldflags) = \
+-            get_config_vars('CC', 'CXX', 'CFLAGS', 'EXTRA_CFLAGS', 'BASECFLAGS',
+-                            'CCSHARED', 'LDSHARED', 'SO', 'AR', 'ARFLAGS',
+-                            'CONFIGURE_CPPFLAGS', 'CONFIGURE_CFLAGS', 'CONFIGURE_LDFLAGS')
++        lp2002043_ubuntu_cflags_workaround = 'APPLY_LP2002043_UBUNTU_CFLAGS_WORKAROUND' in os.environ
++
++        if (lp2002043_ubuntu_cflags_workaround):
++            (cc, cxx, cflags, extra_cflags, basecflags, opt,
++            ccshared, ldshared, so_ext, ar, ar_flags,
++            configure_cppflags, configure_cflags, configure_ldflags) = \
++                get_config_vars('CC', 'CXX', 'CFLAGS', 'EXTRA_CFLAGS', 'BASECFLAGS', 'OPT',
++                                'CCSHARED', 'LDSHARED', 'SO', 'AR', 'ARFLAGS',
++                                'CONFIGURE_CPPFLAGS', 'CONFIGURE_CFLAGS', 'CONFIGURE_LDFLAGS')
++        else:
++            (cc, cxx, cflags, extra_cflags, basecflags,
++            ccshared, ldshared, so_ext, ar, ar_flags,
++            configure_cppflags, configure_cflags, configure_ldflags) = \
++                get_config_vars('CC', 'CXX', 'CFLAGS', 'EXTRA_CFLAGS', 'BASECFLAGS',
++                                'CCSHARED', 'LDSHARED', 'SO', 'AR', 'ARFLAGS',
++                                'CONFIGURE_CPPFLAGS', 'CONFIGURE_CFLAGS', 'CONFIGURE_LDFLAGS')
+ 
+         if 'CC' in os.environ:
+             newcc = os.environ['CC']
+@@ -228,7 +238,15 @@
+             cflags = ' '.join(str(x) for x in (basecflags, os.environ['CFLAGS'], extra_cflags) if x)
+             ldshared = ldshared + ' ' + os.environ['CFLAGS']
+         elif configure_cflags:
+-            cflags = ' '.join(str(x) for x in (basecflags, configure_cflags, extra_cflags) if x)
++            print("There is a workaround to now inherit optimization CFLAGS when compiling wheels.")
++            print("To enable this, set APPLY_LP2002043_UBUNTU_CFLAGS_WORKAROUND in your")
++            print("environment. See LP: https://launchpad.net/bugs/2002043 for further context.")
++            if (lp2002043_ubuntu_cflags_workaround):
++                print("APPLY_LP2002043_UBUNTU_CFLAGS_WORKAROUND detected, using workaround.")
++                cflags = ' '.join(str(x) for x in (basecflags, opt, configure_cflags, extra_cflags) if x)
++            else:
++                print("APPLY_LP2002043_UBUNTU_CFLAGS_WORKAROUND not detected.")
++                cflags = ' '.join(str(x) for x in (basecflags, configure_cflags, extra_cflags) if x)
+             ldshared = ldshared + ' ' + configure_cflags
+         if 'CPPFLAGS' in os.environ:
+             cpp = cpp + ' ' + os.environ['CPPFLAGS']

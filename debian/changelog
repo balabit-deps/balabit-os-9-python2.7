@@ -1,3 +1,10 @@
+python2.7 (2.7.18-13ubuntu1.2) jammy; urgency=medium
+
+  * Add d/p/add-optimization-flags-to-cflags.diff: Add optimization flags to
+    cflags when compiling C modules. (LP: #2002043)
+
+ -- Mitchell Dzurick <mitchell.dzurick@canonical.com>  Sun, 15 Oct 2023 12:43:11 -0400
+
 python2.7 (2.7.18-13ubuntu1.1) jammy-security; urgency=medium
 
   * SECURITY UPDATE: Injection Attack
