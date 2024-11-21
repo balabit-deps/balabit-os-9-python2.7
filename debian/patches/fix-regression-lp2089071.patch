@@ -1,0 +1,33 @@
+Description: Regresison fix
+ Regression caused due to incomplete fix of CVE-2024-6232 in python2.7.
+Author: Nishit Majithia  <nishit.majithia@canonical.com>
+Origin: other
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/2089071
+
+--- python2.7-2.7.18.orig/Lib/tarfile.py
++++ python2.7-2.7.18/Lib/tarfile.py
+@@ -1396,7 +1396,7 @@
+         # the newline. keyword and value are both UTF-8 encoded strings.
+         regex = re.compile(r"(\d+) ([^=]+)=", re.U)
+         pos = 0
+-        while len(buf) > pos and buf[pos] != 0x00:
++        while len(buf) > pos and ord(buf[pos]) != 0x00:
+             match = _header_length_prefix_re.match(buf, pos)
+             if not match:
+                 raise InvalidHeaderError("invalid header")
+@@ -1415,13 +1415,14 @@
+             keyword_and_value = buf[match.end(1) + 1:header_value_end_offset]
+             raw_keyword, equals, raw_value = keyword_and_value.partition(b"=")
+             # Check the framing of the header. The last character must be '\n' (0x0A)
+-            if not raw_keyword or equals != b"=" or buf[header_value_end_offset] != 0x0A:
++            if not raw_keyword or equals != b"=" or ord(buf[header_value_end_offset]) != 0x0A:
+                 raise InvalidHeaderError("invalid header")
+ 
+             keyword = raw_keyword.decode("utf8")
+             value = raw_value.decode("utf8")
+ 
+             pax_headers[keyword] = value
++            pos += length
+ 
+         # Fetch the next header.
+         try:

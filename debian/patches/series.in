@@ -86,3 +86,6 @@ skip-tls1.2-tests.diff
 issue46811.diff
 CVE-2015-20107.patch
 lp2002043-add-optimization-flags-to-cflags.patch
+CVE-2024-6232.patch
+CVE-2024-6923.patch
+fix-regression-lp2089071.patch

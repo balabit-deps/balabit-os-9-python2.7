@@ -1,3 +1,23 @@
+python2.7 (2.7.18-13ubuntu1.4) jammy-security; urgency=medium
+
+  * SECURITY REGRESSION: regression for CVE-2024-6232
+    - d/p/fix-regression-lp2089071.patch: fix incomplete update for
+      CVE-2024-6232 (LP: #2089071)
+
+ -- Nishit Majithia <nishit.majithia@canonical.com>  Thu, 21 Nov 2024 15:31:26 +0530
+
+python2.7 (2.7.18-13ubuntu1.3) jammy-security; urgency=medium
+
+  * SECURITY UPDATE: denial of service
+    - debian/patches/CVE-2024-6232.patch: Remove backtracking when parsing
+      tarfile headers
+    - CVE-2024-6232
+  * SECURITY UPDATE: header injection issue
+    - debian/patches/CVE-2024-6923.patch: Encode newlines in headers
+    - CVE-2024-6923
+
+ -- Nishit Majithia <nishit.majithia@canonical.com>  Wed, 13 Nov 2024 10:22:30 +0530
+
 python2.7 (2.7.18-13ubuntu1.2) jammy; urgency=medium
 
   * Add d/p/add-optimization-flags-to-cflags.diff: Add optimization flags to
