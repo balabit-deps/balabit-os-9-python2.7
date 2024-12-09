@@ -1,3 +1,34 @@
+python2.7 (2.7.18-13ubuntu1.5) jammy-security; urgency=medium
+
+  * SECURITY UPDATE: User-after-free
+    - debian/patches/CVE-2022-48560.patch: Fix posible crash in heapq with
+      custom comparison operators in  Modules/_heapqmodule.c,
+      Lib/test/test_heapq.py.
+    - CVE-2022-48560
+  * SECURITY UPDATE: xml external entity processing
+    - debian/patches/CVE-2022-48565.patch: rejects XML entity declarations in
+      plist files.
+    - CVE-2022-48565
+  * SECURITY UPDATE: breaking of constant-time guarantee for crypto operations
+    - debian/patches/CVE-2022-48566.patch: adds ``volatile`` to the accumulator
+      variable result in ``hmac.compare_digest``, making
+      constant-time-defeating optimizations less likely.
+    - CVE-2022-48566
+  * SECURITY UPDATE: Possible Bypass Blocklisting
+    - debian/patches/CVE-2023-24329.patch: enforce
+      that a scheme must begin with an alphabetical ASCII character
+      in Lib/urlparse.py, Lib/test/test_urlparse.py.
+    - debian/patches/CVE-2023-24329-2.patch: adds a complementary patch/fix
+      for CVE-2023-24329 that was partially fixed before. This patch starts
+      stripping C0 control and space chars in 'urlsplit' in Lib/urlparse.py,
+      Lib/test/test_urlparse.py.
+    - CVE-2023-24329
+  * SECURITY UPDATE: TLS handshake bypass
+    - debian/patches/CVE-2023-40217.diff: avoid ssl pre-close flaw in ssl.py.
+    - CVE-2023-40217
+
+ -- Leonidas Da Silva Barbosa <leo.barbosa@canonical.com>  Mon, 09 Dec 2024 15:47:23 -0300
+
 python2.7 (2.7.18-13ubuntu1.4) jammy-security; urgency=medium
 
   * SECURITY REGRESSION: regression for CVE-2024-6232

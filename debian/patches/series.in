@@ -89,3 +89,9 @@ lp2002043-add-optimization-flags-to-cflags.patch
 CVE-2024-6232.patch
 CVE-2024-6923.patch
 fix-regression-lp2089071.patch
+CVE-2022-48560.patch
+CVE-2022-48565.patch
+CVE-2022-48566.patch
+CVE-2023-24329.patch
+CVE-2023-24329-2.patch
+CVE-2023-40217.diff
